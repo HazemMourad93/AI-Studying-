@@ -1,6 +1,5 @@
-// Public browser configuration. Fill in ONLY the Project URL and PUBLISHABLE key.
-// Never commit a service_role key, sb_secret_* key, password, or token.
+// Public Supabase client config. Publishable key only — never use service_role/secret keys.
 window.THL_SUPABASE_CONFIG = {
-  url: "",
-  publishableKey: ""
+  url: "https://jflyoaxbhnzavotfuugy.supabase.co",
+  publishableKey: "sb_publishable_vonwjqvTCdvc7zZIcOJw9A_qLk9nrWo"
 };
