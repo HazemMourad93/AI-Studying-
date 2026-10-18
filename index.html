@@ -137,7 +137,7 @@ function updateStats(){
   const percent=Math.round(done/boxes.length*100);
   const days=[...document.querySelectorAll('.day')];
   let finished=0;
-  days.forEach(day=>{const items=[...day.querySelectorAll('input[type="checkbox"]')];const all=items.length>0&&items.every(x=>x.checked);day.classList.toggle('done',all);if(all)finished++});
+  days.forEach(day=>{const items=[...day.querySelectorAll('input[type="checkbox"]:not([data-resource])')];const all=items.length>0&&items.every(x=>x.checked);day.classList.toggle('done',all);if(all)finished++});
   document.getElementById('percent').textContent=percent+'%';
   document.getElementById('completed').textContent=done+' / '+boxes.length;
   document.getElementById('daysDone').textContent=finished+' / '+days.length;
@@ -196,7 +196,7 @@ async function restoreBackup(input){
   if(data.type!=='THL-AI-STUDY'||!data.checked||typeof data.checked!=='object'||Array.isArray(data.checked))throw Error('Invalid study backup');
   let count=0;
   for(const box of allBoxes){const id=idFor(box);if(data.checked[id]===true && state[id]!==true){state[id]=true;count++;window.dispatchEvent(new CustomEvent('thl-progress-change',{detail:{id,checked:true}}))}}
-  persist();allBoxes.forEach(box=>box.checked=Boolean(state[idFor(box)]));updateStats();updateReferenceProgress();
+  persist();allBoxes.forEach(box=>box.checked=Boolean(state[idFor(box)]));if(data.theme==="dark"||data.theme==="light"){applyTheme(data.theme);try{localStorage.setItem(themeKey,data.theme)}catch(e){}window.dispatchEvent(new CustomEvent("thl-theme-change",{detail:{theme:data.theme}}))}updateStats();updateReferenceProgress();
   alert('Restored '+count+' checked items. Your existing checked choices were preserved.');
  }catch(err){alert('Could not import backup: '+err.message)}
  finally{input.value=''}
