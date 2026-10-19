@@ -144,13 +144,14 @@ html[data-theme="dark"] .pareto-case h3{color:#a8d8ff}
 html[data-theme="dark"] .pareto-sub{color:#aec1d8}
 @media(max-width:750px){.pareto-kpis{grid-template-columns:repeat(2,1fr)}.pareto-guides{grid-template-columns:1fr}}
 @media print{.pareto-kpis,.pareto-note{break-inside:avoid}}
-</style></head>
+</style><style id="study-shortcuts-style">.study-jump{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}.study-jump a{font-size:13px;text-decoration:none;display:inline-flex;align-items:center}.study-jump a:hover{text-decoration:underline}@media(max-width:600px){.study-jump a{width:100%;justify-content:center}}html[data-theme="dark"] .study-jump .btn.primary{background:#33659b;color:white;border-color:#477bb6}</style></head>
 <body><main class="wrap">
 <div class="toolbar"><div class="kicker">THL · AI Interviewer · Python beginner · Windows / PyCharm</div><div class="actions"><button class="btn" type="button" id="themeToggle" aria-pressed="false" onclick="toggleTheme()">🌙 Dark mode</button><button class="btn" onclick="window.print()">Print / Save PDF</button><button class="btn" onclick="exportProgress()">Export progress</button><button class="btn" type="button" onclick="downloadBackup()">Download backup</button><button class="btn" type="button" onclick="selectBackup()">Restore backup</button><input type="file" id="backupInput" accept=".json,application/json" hidden onchange="restoreBackup(this)"><button class="btn" onclick="resetProgress()">Reset checks</button></div></div>
 <header>
 <h1>AI Interviewer QA<br/>35-Day Study Planner</h1>
 <p class="subtitle">High-leverage learning: start with the 20% of concepts that drive the biggest testing improvements, then apply them to THL. Use pen and paper, active recall, and small practical evaluations. Rest as needed.</p>
 <span class="pill">October 17 – November 20, 2026</span><span class="pill">Flexible pace · lighter Day 1</span><span class="pill">7 syllabus chapters</span><span class="pill">Finish both priority courses by November 20</span><span class="pill">Sat 10 AM · other days 9 PM (flexible)</span>
+<div class="study-jump"><a class="btn primary" href="#pareto-lab">⚡ Start the 10 Pareto AI testing labs</a><a class="btn" href="#agenda">35-day study timetable</a><a class="btn" href="#day33">Nov 19: Evidence lab</a><a class="btn" href="#day34">Nov 20: Final AI evaluation</a></div>
 </header>
 <div aria-label="Progress" class="summary">
 <div class="metric"><strong id="percent">0%</strong><span>Completed</span></div>
