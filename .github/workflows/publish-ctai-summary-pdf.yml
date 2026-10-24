@@ -1,0 +1,49 @@
+name: Publish CT-AI chapter summaries PDF
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'ctai-summaries/index.html'
+      - 'index.html'
+      - '.github/workflows/publish-ctai-summary-pdf.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install HTML-to-PDF dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq libpango-1.0-0 libpangoft2-1.0-0 libharfbuzz0b libffi-dev fonts-dejavu-core
+          python -m pip install --upgrade pip
+          python -m pip install weasyprint==68.0 pypdf
+      - name: Generate PDF from published chapter page
+        run: |
+          python - <<'PY'
+          from weasyprint import HTML
+          from pypdf import PdfReader
+          from pathlib import Path
+          src=Path('ctai-summaries/index.html')
+          dst=Path('ctai-summaries/CTAI_v2_Chapter_Summaries.pdf')
+          HTML(filename=str(src),base_url=str(src.parent.resolve())).write_pdf(str(dst))
+          count=len(PdfReader(str(dst)).pages)
+          print(f'PDF generated: {dst}, pages={count}, bytes={dst.stat().st_size}')
+          if count>20 or count<7: raise SystemExit('Unexpected PDF page count')
+          PY
+      - name: Commit generated PDF
+        run: |
+          if [[ -n "$(git status --porcelain -- ctai-summaries/CTAI_v2_Chapter_Summaries.pdf)" ]]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add ctai-summaries/CTAI_v2_Chapter_Summaries.pdf
+            git commit -m "Publish generated CT-AI v2 chapter summary PDF [skip ci]"
+            git push
+          else
+            echo "PDF already current."
+          fi
