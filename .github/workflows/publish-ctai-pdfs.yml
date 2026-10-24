@@ -1,0 +1,42 @@
+name: Build CT-AI chapter PDFs
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'study-guides/ct-ai-v2-summaries.html'
+      - 'study-guides/build_guides.py'
+      - '.github/workflows/publish-ctai-pdfs.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish-chapter-pdfs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install PDF generator
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq libpango-1.0-0 libpangoft2-1.0-0
+          python -m pip install --disable-pip-version-check 'weasyprint>=66,<70' 'pymupdf>=1.24,<2' 'beautifulsoup4>=4.12,<5'
+      - name: Render all chapter summaries as verified PDFs
+        run: python study-guides/build_guides.py
+      - name: Commit PDFs to the site
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add study-guides/pdfs/
+          if ! git diff --cached --quiet; then
+            git commit -m "Publish CT-AI v2 chapter PDF downloads [skip ci]"
+            git push origin HEAD:main
+          else
+            echo "All CT-AI PDF downloads are up to date."
+          fi
