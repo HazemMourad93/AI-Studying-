@@ -1,86 +1,69 @@
-name: Publish bilingual CT-AI chapter PDFs
+name: Publish CT-AI Arabic and English PDFs
 on:
   push:
     branches: [main]
     paths:
-      - 'ctai-summaries/index.html'
-      - 'ctai-summaries/sections-1-3.json'
-      - 'ctai-summaries/sections-4-7.json'
+      - 'ctai-summaries/ar.html'
+      - 'ctai-summaries/en.html'
       - '.github/workflows/publish-ctai-summary-pdf.yml'
   workflow_dispatch:
 
 permissions:
   contents: write
 
-concurrency:
-  group: ctai-bilingual-pdf
-  cancel-in-progress: false
-
 jobs:
   generate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Install Arabic-capable HTML/PDF libraries
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install HTML-to-PDF dependencies
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y -qq fonts-dejavu-core fonts-noto-core fonts-noto-extra libpango-1.0-0 libpangoft2-1.0-0 libharfbuzz0b libffi-dev
-          python -m pip install --upgrade pip
-          python -m pip install 'weasyprint==68.0' 'pypdf>=5,<7' 'beautifulsoup4>=4.12,<5'
-      - name: Render seven PDFs and validate 5-page per-chapter cap
+          sudo apt-get install -y -qq libpango-1.0-0 libpangoft2-1.0-0 libharfbuzz0b libffi-dev fonts-dejavu-core fonts-noto-core
+          python -m pip install weasyprint==68.0 pypdf beautifulsoup4
+      - name: Generate and validate the separate language PDFs
         run: |
           python - <<'PY'
-          import json
           from pathlib import Path
+          from io import BytesIO
           from bs4 import BeautifulSoup
           from weasyprint import HTML
           from pypdf import PdfReader, PdfWriter
 
-          base=Path('ctai-summaries')
-          raw=(base/'index.html').read_text(encoding='utf-8')
-          soup=BeautifulSoup(raw,'html.parser')
-          css='\n'.join(tag.get_text() for tag in soup.find_all('style'))
-          pages={}
-          writer=PdfWriter()
-          for n in range(1,8):
-              chapter=soup.select_one(f'article.chapter#chapter-{n}')
-              if chapter is None:
-                  raise SystemExit(f'Chapter {n} missing from HTML')
-              # Preserve all Arabic/English section points and mind maps.
-              standalone=f'<!doctype html><html lang="en"><head><meta charset="utf-8"><style>{css}</style></head><body><main class="container">{chapter}</main></body></html>'
-              out=base/f'CTAI_v2_Chapter_{n}_Summary.pdf'
-              HTML(string=standalone,base_url=str(base.resolve())).write_pdf(str(out))
-              read=PdfReader(str(out))
-              count=len(read.pages)
-              pages[f'chapter_{n}']=count
-              if count>5 or count<1:
-                  raise SystemExit(f'Chapter {n}: {count} pages exceeds maximum 5 (or invalid)')
-              # Every chapter starts with its genuine numbered subsection header.
-              text=' '.join((page.extract_text() or '') for page in read.pages)
-              if f'{n}.1.1' not in text and n not in (2,):
-                  raise SystemExit(f'Chapter {n} missing expected numbering')
-              if 'Important Definitions' not in text or 'Mind Map' not in text:
-                  raise SystemExit(f'Chapter {n} missing English definitions or mind map')
-              for page in read.pages:
-                  writer.add_page(page)
-              print(f'Chapter {n}: {count} A4 pages; {out.stat().st_size} bytes')
-          combined=base/'CTAI_v2_Chapter_Summaries.pdf'
-          with open(combined,'wb') as stream: writer.write(stream)
-          combined_pages=len(PdfReader(str(combined)).pages)
-          if combined_pages!=sum(pages.values()) or combined_pages>35:
-              raise SystemExit(f'Unexpected combined PDF pages: {combined_pages}')
-          report={"max_pages_per_chapter":5,"chapter_pages":pages,"total_pages":combined_pages,"all_chapters_bilingual":True,"source":"ISTQB CT-AI v2.0 syllabus"}
-          (base/'pdf-page-counts.json').write_text(json.dumps(report,indent=2)+'\n')
-          print('VERIFIED',report)
+          for lang,label in [('ar','Arabic'), ('en','English')]:
+              path=Path('ctai-summaries')/(lang+'.html')
+              soup=BeautifulSoup(path.read_text(encoding='utf-8'),'html.parser')
+              intro=soup.select_one('section.cover')
+              chapters=soup.select('article.chapter')
+              if not intro or len(chapters)!=7:
+                  raise RuntimeError(f'Missing cover or chapters in {path}: {len(chapters)}')
+              head=str(soup.head)
+              writer=PdfWriter()
+              for name,article in [('cover',intro)]+[(f'chapter_{n}',c) for n,c in enumerate(chapters,1)]:
+                  markup=f'<!doctype html><html lang="{lang}">{head}<body class="{lang}"><div class="container">{article}</div></body></html>'
+                  pdf=HTML(string=markup,base_url=str(path.parent.resolve())).write_pdf()
+                  pages=len(PdfReader(BytesIO(pdf)).pages)
+                  if (name=='cover' and pages>2) or (name!='cover' and pages>5):
+                      raise RuntimeError(f'{lang} {name} has {pages} pages — exceeds limit')
+                  start=len(writer.pages)
+                  writer.append(BytesIO(pdf),import_outline=False)
+                  if name.startswith('chapter_'):
+                      writer.add_outline_item(f'Chapter {name.split("_")[1]}', start)
+                  print(f'{lang} {name}: {pages} pages')
+              writer.add_metadata({'/Title':f'ISTQB CT-AI v2.0 - {label} Chapter Summaries'})
+              target=Path('ctai-summaries')/f'CTAI_v2_{label}.pdf'
+              with target.open('wb') as out:writer.write(out)
+              print(f'Generated {target} with {len(writer.pages)} total pages')
           PY
-      - name: Publish individual and combined PDFs
+      - name: Commit both PDF files
         run: |
-          git add ctai-summaries/CTAI_v2_Chapter_*_Summary.pdf ctai-summaries/CTAI_v2_Chapter_Summaries.pdf ctai-summaries/pdf-page-counts.json
-          if ! git diff --cached --quiet; then
+          if [[ -n "$(git status --porcelain -- ctai-summaries/CTAI_v2_Arabic.pdf ctai-summaries/CTAI_v2_English.pdf)" ]]; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git commit -m "Publish bilingual section-based CT-AI chapter PDFs [skip ci]"
-            git push origin HEAD:main
+            git add ctai-summaries/CTAI_v2_Arabic.pdf ctai-summaries/CTAI_v2_English.pdf
+            git commit -m "Publish validated CT-AI Arabic and English PDFs [skip ci]"
+            git push
           else
-            echo "PDFs already match HTML."
+            echo "PDFs are already current."
           fi
