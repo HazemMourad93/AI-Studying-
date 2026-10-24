@@ -1,0 +1,15 @@
+{
+  "max_pages_per_chapter": 5,
+  "chapter_pages": {
+    "chapter_1": 2,
+    "chapter_2": 2,
+    "chapter_3": 3,
+    "chapter_4": 2,
+    "chapter_5": 2,
+    "chapter_6": 3,
+    "chapter_7": 1
+  },
+  "total_pages": 15,
+  "all_chapters_bilingual": true,
+  "source": "ISTQB CT-AI v2.0 syllabus"
+}
