@@ -675,8 +675,19 @@ async function restoreBackup(input){
   if(file.size>1048576)throw Error('Backup too large');
   const data=JSON.parse(await file.text());
   if(data.type!=='THL-AI-STUDY'||!data.checked||typeof data.checked!=='object'||Array.isArray(data.checked))throw Error('Invalid study backup');
+  // Restore current section items AND safely retain earlier 35-day lecture keys.
+  // Old lecture flags are never reinterpreted as new course-section completion.
+  const visibleIds=new Set(allBoxes.map(idFor));
+  const legacyId=/^(?:d\d{1,2}[tw]\d{1,2}|p\d{1,2}|[KR]\d{1,2}|ref\d{1,2})$/;
+  const entries=Object.entries(data.checked);
+  if(entries.length>1500)throw Error('Backup contains too many progress items');
   let count=0;
-  for(const box of allBoxes){const id=idFor(box);if(data.checked[id]===true && state[id]!==true){state[id]=true;count++;window.dispatchEvent(new CustomEvent('thl-progress-change',{detail:{id,checked:true}}))}}
+  for(const [id,checked] of entries){
+    if((visibleIds.has(id)||legacyId.test(id))&&checked===true&&state[id]!==true){
+      state[id]=true;count++;
+      window.dispatchEvent(new CustomEvent('thl-progress-change',{detail:{id,checked:true}}));
+    }
+  }
   persist();allBoxes.forEach(box=>box.checked=Boolean(state[idFor(box)]));if(data.theme==="dark"||data.theme==="light"){applyTheme(data.theme);try{localStorage.setItem(themeKey,data.theme)}catch(e){}window.dispatchEvent(new CustomEvent("thl-theme-change",{detail:{theme:data.theme}}))}updateStats();updateReferenceProgress();
   alert('Restored '+count+' checked items. Your existing checked choices were preserved.');
  }catch(err){alert('Could not import backup: '+err.message)}
