@@ -1,0 +1,500 @@
+{
+  "schema": 1,
+  "source": "Actual enrolled Udemy curriculum, verified 2026-10-27",
+  "deadline": "2026-11-20",
+  "timezone": "Africa/Cairo",
+  "rules": {
+    "durationTueWedThu": 3,
+    "durationFriSat": 5,
+    "SunMon": "Rest / optional catch-up",
+    "intro": "Skim rather than watching administrative material",
+    "priority": "Section outcome + QA evidence, not lecture count"
+  },
+  "courses": {
+    "K": {
+      "name": "Karthik KK — E2E DeepEval",
+      "url": "https://www.udemy.com/course/ai-testing-deepeval-chatbot-rag-agent-mcp/learn/lecture/56044667#overview",
+      "sections": {
+        "1": "Introduction (skim)",
+        "2": "Understanding DeepEval",
+        "3": "Local LLMs with Ollama",
+        "4": "Local LLM-as-a-Judge",
+        "5": "LangChain Mock App",
+        "6": "DeepEval Test Cases, Datasets & Goldens",
+        "7": "DeepEval Metrics + GEval",
+        "8": "AI Application Under Test",
+        "9": "Jupyter E2E Evaluation",
+        "10": "Pytest + DeepEval Integration",
+        "11": "Multi-Conversational Chatbot Testing",
+        "12": "RAG Evaluation",
+        "13": "MCP Server Evaluation",
+        "14": "What's Next (skim)",
+        "15": "Complete PyTest Crash Course"
+      }
+    },
+    "R": {
+      "name": "Rahul Shetty — ML Models AI Testing",
+      "url": "https://www.udemy.com/course/machine-learning-models-ai-testing/learn/lecture/45889207#overview",
+      "sections": {
+        "1": "ML Testing Basics",
+        "2": "Supervised ML / Overfitting",
+        "3": "Unsupervised Model Testing",
+        "4": "Reinforcement Learning & Frameworks",
+        "5": "Functional ML Model Evaluation",
+        "6": "ML Model API Testing",
+        "7": "Responsible AI Testing",
+        "8": "Post-Deployment ML Testing",
+        "9": "QA Wrap-Up (skim)"
+      }
+    },
+    "A": {
+      "name": "Machine Learning A–Z — first 3 sections only",
+      "url": "https://www.udemy.com/course/machinelearning/learn/lecture/34648402#overview",
+      "sections": {
+        "1": "Welcome + setup only",
+        "2": "Part 1 — Data Preprocessing",
+        "3": "Data Preprocessing in Python"
+      }
+    }
+  },
+  "selectedTierVideos": {
+    "1": {
+      "title": "3Blue1Brown Neural Networks — specific visual lesson",
+      "url": "https://www.3blue1brown.com/topics/neural-networks",
+      "savedID": "ref33"
+    },
+    "4": {
+      "title": "StatQuest — Confusion Matrix, Precision and Recall",
+      "url": "https://www.youtube.com/@statquest",
+      "savedID": "ref36"
+    },
+    "5": {
+      "title": "Karpathy — Intro to Large Language Models (selected portion)",
+      "url": "https://www.youtube.com/watch?v=zjkBMFhNj_g",
+      "savedID": "ref37"
+    },
+    "6": {
+      "title": "Karpathy — Deep Dive into LLMs (selected portion)",
+      "url": "https://www.youtube.com/watch?v=7xTGNNLPyMI",
+      "savedID": "ref38"
+    }
+  },
+  "days": [
+    {
+      "date": "2026-10-28",
+      "title": "Python bootstrap + Pytest first (no intro marathon)",
+      "sections": [
+        {
+          "course": "A",
+          "section": 1,
+          "title": "Welcome + setup only",
+          "phase": "complete"
+        },
+        {
+          "course": "A",
+          "section": 2,
+          "title": "Part 1 — Data Preprocessing",
+          "phase": "complete"
+        },
+        {
+          "course": "K",
+          "section": 15,
+          "title": "Complete PyTest Crash Course",
+          "phase": "part 1/2"
+        }
+      ],
+      "chapter": "CT-AI 3.1–3.2",
+      "focus": "Set up Python/Colab; data types, test functions, assert, test discovery.",
+      "lab": "Run pytest on 3 saved-question-bank membership examples using synthetic questions.",
+      "evidence": "tests/test_question_bank.py runs 3 positive/negative assertions.",
+      "tier": [],
+      "priority": "P0"
+    },
+    {
+      "date": "2026-10-29",
+      "title": "Finish Pytest foundation + ML test basics",
+      "sections": [
+        {
+          "course": "K",
+          "section": 15,
+          "title": "Complete PyTest Crash Course",
+          "phase": "complete after part 2/2"
+        },
+        {
+          "course": "R",
+          "section": 1,
+          "title": "ML Testing Basics",
+          "phase": "complete"
+        },
+        {
+          "course": "A",
+          "section": 3,
+          "title": "Data Preprocessing in Python",
+          "phase": "part 1/2"
+        }
+      ],
+      "chapter": "CT-AI 1–3",
+      "focus": "Fixtures, conftest, fixture scopes, parametrize, markers; Rahul's AI-vs-ML primer.",
+      "lab": "Parameterize 5 authorized-bank and out-of-bank checks with fixtures; start loading a simple CSV.",
+      "evidence": "5 pytest cases + fixture file; Section 15 completed.",
+      "tier": [],
+      "priority": "P0"
+    },
+    {
+      "date": "2026-10-30",
+      "title": "Python preprocessing + DeepEval entry + supervised ML",
+      "sections": [
+        {
+          "course": "A",
+          "section": 3,
+          "title": "Data Preprocessing in Python",
+          "phase": "complete after part 2/2"
+        },
+        {
+          "course": "K",
+          "section": 2,
+          "title": "Understanding DeepEval",
+          "phase": "complete"
+        },
+        {
+          "course": "R",
+          "section": 2,
+          "title": "Supervised ML / Overfitting",
+          "phase": "complete"
+        }
+      ],
+      "chapter": "CT-AI 3.2, 3.3, 6.1.8",
+      "focus": "Pandas read_csv, missing data, encoding, train/test split; first DeepEval; overfit vs underfit.",
+      "lab": "Build 10-row synthetic candidate dataset and one exact/non-LLM evaluation; describe one data leakage risk.",
+      "evidence": "candidate_evaluation.csv + reproducible pytest + DeepEval quickcheck.",
+      "tier": [
+        1
+      ],
+      "priority": "P0"
+    },
+    {
+      "date": "2026-10-31",
+      "title": "Golden dataset essentials + ML model families",
+      "sections": [
+        {
+          "course": "K",
+          "section": 6,
+          "title": "DeepEval Test Cases, Datasets & Goldens",
+          "phase": "complete"
+        },
+        {
+          "course": "R",
+          "section": 3,
+          "title": "Unsupervised Model Testing",
+          "phase": "complete"
+        },
+        {
+          "course": "R",
+          "section": 4,
+          "title": "Reinforcement Learning & Frameworks",
+          "phase": "complete"
+        }
+      ],
+      "chapter": "CT-AI 3.1–3.4, 5.1",
+      "focus": "LLMTestCase, goldens and datasets; clustering, association, reinforcement learning.",
+      "lab": "Annotate 10 synthetic interview answers; assign correct evidence spans and explicit golden labels.",
+      "evidence": "Golden dataset v1 (10 examples) + annotation rules.",
+      "tier": [
+        1
+      ],
+      "priority": "P0"
+    },
+    {
+      "date": "2026-11-03",
+      "title": "Precision/recall and GEval: measure, don't guess",
+      "sections": [
+        {
+          "course": "K",
+          "section": 7,
+          "title": "DeepEval Metrics + GEval",
+          "phase": "complete"
+        },
+        {
+          "course": "R",
+          "section": 5,
+          "title": "Functional ML Model Evaluation",
+          "phase": "part 1/2"
+        }
+      ],
+      "chapter": "CT-AI 2.2, 3.3, 4.1",
+      "focus": "Confusion matrix; accuracy vs precision/recall/F1; custom GEval rubric.",
+      "lab": "Score sample observations for factual grounding and calculate at least one confusion matrix.",
+      "evidence": "Metrics worksheet + draft GEval rubric; identify FP and FN.",
+      "tier": [
+        4
+      ],
+      "priority": "P0"
+    },
+    {
+      "date": "2026-11-04",
+      "title": "Pytest + DeepEval applied, functional evaluation",
+      "sections": [
+        {
+          "course": "K",
+          "section": 10,
+          "title": "Pytest + DeepEval Integration",
+          "phase": "complete"
+        },
+        {
+          "course": "R",
+          "section": 5,
+          "title": "Functional ML Model Evaluation",
+          "phase": "complete after part 2/2"
+        }
+      ],
+      "chapter": "CT-AI 4.1–4.3, 6.1",
+      "focus": "Move DeepEval from notebook into pytest; data-driven test cases and independent judge rubric.",
+      "lab": "Implement parameterized tests that compare answer evidence to intended competency rubric.",
+      "evidence": "Runnable pytest DeepEval suite with at least 5 cases.",
+      "tier": [],
+      "priority": "P0"
+    },
+    {
+      "date": "2026-11-05",
+      "title": "Inspect the AI application and notebook E2E",
+      "sections": [
+        {
+          "course": "K",
+          "section": 8,
+          "title": "AI Application Under Test",
+          "phase": "complete"
+        },
+        {
+          "course": "K",
+          "section": 9,
+          "title": "Jupyter E2E Evaluation",
+          "phase": "complete"
+        }
+      ],
+      "chapter": "CT-AI 4.2, 4.3",
+      "focus": "Application Under Test, session/chat API, event streaming; notebooks for test exploration.",
+      "lab": "Map THL: agent configuration → invitation → permissions → saved-only questions → transcript → observations.",
+      "evidence": "One-page system test map + first transcript-to-observation checklist.",
+      "tier": [],
+      "priority": "P0"
+    },
+    {
+      "date": "2026-11-06",
+      "title": "Multi-turn conversations, API and LangChain",
+      "sections": [
+        {
+          "course": "K",
+          "section": 11,
+          "title": "Multi-Conversational Chatbot Testing",
+          "phase": "complete"
+        },
+        {
+          "course": "K",
+          "section": 5,
+          "title": "LangChain Mock App",
+          "phase": "complete"
+        },
+        {
+          "course": "R",
+          "section": 6,
+          "title": "ML Model API Testing",
+          "phase": "complete"
+        }
+      ],
+      "chapter": "CT-AI 4.2, 7.1",
+      "focus": "Conversation context and relevance; simple LangChain mock; API auth contracts.",
+      "lab": "Create same-session vs cross-session, candidate reconnect, authorization and question-bank boundary scenarios.",
+      "evidence": "8 API/agent test cases + session trace with evidence.",
+      "tier": [
+        5
+      ],
+      "priority": "P0"
+    },
+    {
+      "date": "2026-11-07",
+      "title": "RAG, local models and evaluation scope",
+      "sections": [
+        {
+          "course": "K",
+          "section": 12,
+          "title": "RAG Evaluation",
+          "phase": "complete"
+        },
+        {
+          "course": "K",
+          "section": 3,
+          "title": "Local LLMs with Ollama",
+          "phase": "complete"
+        },
+        {
+          "course": "K",
+          "section": 4,
+          "title": "Local LLM-as-a-Judge",
+          "phase": "complete"
+        }
+      ],
+      "chapter": "CT-AI 3.1.4, 4.2, 5.1",
+      "focus": "RAG retrieval and grounding; optional Ollama local judge; avoid assuming THL implements RAG.",
+      "lab": "Create one controlled retrieval example with known source; tag THL RAG/MCP as N/A if not used.",
+      "evidence": "RAG benchmark example + justified THL applicability matrix.",
+      "tier": [
+        6
+      ],
+      "priority": "P1"
+    },
+    {
+      "date": "2026-11-10",
+      "title": "MCP server testing — contracts and permissions (A)",
+      "sections": [
+        {
+          "course": "K",
+          "section": 13,
+          "title": "MCP Server Evaluation",
+          "phase": "part 1/2"
+        }
+      ],
+      "chapter": "CT-AI 4.2, 7.1",
+      "focus": "MCP tools/resources contract, safe calls, single-turn and authentication boundaries.",
+      "lab": "Run a stubbed tool selection test; deliberately reject access to another org's data.",
+      "evidence": "MCP tool contract table + failed cross-org mock case.",
+      "tier": [],
+      "priority": "P0"
+    },
+    {
+      "date": "2026-11-11",
+      "title": "MCP server testing — conversation and integration (B)",
+      "sections": [
+        {
+          "course": "K",
+          "section": 13,
+          "title": "MCP Server Evaluation",
+          "phase": "complete after part 2/2"
+        }
+      ],
+      "chapter": "CT-AI 4.2, 6.1, 7.1",
+      "focus": "Finish MCP eval, chained/tool conversation, permissions and recovery.",
+      "lab": "Test denied tool call, timeout/error, and no unauthorized action; use mock data if THL lacks MCP.",
+      "evidence": "Parameterized tool-call regression with pass/fail evidence.",
+      "tier": [],
+      "priority": "P0"
+    },
+    {
+      "date": "2026-11-12",
+      "title": "Responsible AI and observational fairness",
+      "sections": [
+        {
+          "course": "R",
+          "section": 7,
+          "title": "Responsible AI Testing",
+          "phase": "complete"
+        }
+      ],
+      "chapter": "CT-AI 2.1–2.2, 5.1, 6.1",
+      "focus": "Bias, transparency, privacy, safety; GEval judge calibration versus human annotations.",
+      "lab": "Paired equivalent answers across language/accent cues; compare rubric scores without sensitive inferences.",
+      "evidence": "Fairness & privacy risk table + calibrated human/GEval disagreements.",
+      "tier": [
+        6
+      ],
+      "priority": "P0"
+    },
+    {
+      "date": "2026-11-13",
+      "title": "Post-deployment model QA and test automation",
+      "sections": [
+        {
+          "course": "R",
+          "section": 8,
+          "title": "Post-Deployment ML Testing",
+          "phase": "complete"
+        }
+      ],
+      "chapter": "CT-AI 6.1, 7.1",
+      "focus": "Data/concept drift, shadow and A/B testing, smoke/regression, CI strategy.",
+      "lab": "Run a mock back-to-back comparison of two evaluation versions and write a deployment gate.",
+      "evidence": "Release-check spreadsheet: model version, prompt, rubric, dataset and failure categories.",
+      "tier": [],
+      "priority": "P0"
+    },
+    {
+      "date": "2026-11-14",
+      "title": "THL capstone — complete interview, evidence, risk",
+      "sections": [],
+      "chapter": "CT-AI 2, 4, 5, 6",
+      "focus": "Pareto P0: real THL interview scenario, question bank, evidence and rubric.",
+      "lab": "Execute agent creation/configuration, invitation/expiry, mic/camera, randomized saved questions, recording/transcript/report; do not assume question generation.",
+      "evidence": "Reusable interview E2E checklist and ≥10 evidence-linked assertions.",
+      "tier": [],
+      "priority": "P0"
+    },
+    {
+      "date": "2026-11-17",
+      "title": "Complete remaining administrative sections + QA alignment",
+      "sections": [
+        {
+          "course": "K",
+          "section": 1,
+          "title": "Introduction (skim)",
+          "phase": "complete"
+        },
+        {
+          "course": "K",
+          "section": 14,
+          "title": "What's Next (skim)",
+          "phase": "complete"
+        },
+        {
+          "course": "R",
+          "section": 9,
+          "title": "QA Wrap-Up (skim)",
+          "phase": "complete"
+        }
+      ],
+      "chapter": "CT-AI 1, 4, 7",
+      "focus": "Skim/mark brief intro and closing sections; audit all E2E 1–15 and Rahul 1–9 section milestones.",
+      "lab": "Identify any section outcomes still missing; repair no more than two priority gaps.",
+      "evidence": "All substantive course sections accounted for; residual gap list.",
+      "tier": [],
+      "priority": "P0"
+    },
+    {
+      "date": "2026-11-18",
+      "title": "Golden evaluation: factuality, repeatability and scoring",
+      "sections": [],
+      "chapter": "CT-AI 3.3, 4.1, 5.1, 6.1",
+      "focus": "Independent oracle, claim-level evidence; repeat-run stability, precision and recall.",
+      "lab": "Review 20 synthetic observations and document supported/unsupported claims; repeat equivalent prompts.",
+      "evidence": "Evaluation results table with confidence limitations and FP/FN cases.",
+      "tier": [],
+      "priority": "P0"
+    },
+    {
+      "date": "2026-11-19",
+      "title": "Hardening — regression, privacy and release criteria",
+      "sections": [],
+      "chapter": "CT-AI 2.2, 4.2, 6.1, 7.1",
+      "focus": "Threats, prompt injection, data leaks, versioned tests, model performance regression.",
+      "lab": "Run Pytest+DeepEval suite, inspect false-pass/false-reject and approved gate compliance.",
+      "evidence": "Clean regression report and open risks; no unapproved PASS thresholds.",
+      "tier": [],
+      "priority": "P0"
+    },
+    {
+      "date": "2026-11-20",
+      "title": "Final 5-hour E2E AI QA validation + handoff",
+      "sections": [],
+      "chapter": "CT-AI 1–7 recap",
+      "focus": "Verify E2E 15 sections, Rahul 9, ML A-Z 3; focus on a functioning and evidence-backed test process.",
+      "lab": "Perform final controlled THL agent workflow and evaluation; deliver team-ready QA report with limitations.",
+      "evidence": "Final pytest results, golden dataset, coverage matrix, defects and release recommendation.",
+      "tier": [],
+      "priority": "P0"
+    }
+  ],
+  "totals": {
+    "hours": 68,
+    "sessions": 18,
+    "3h": 11,
+    "5h": 7
+  }
+}
