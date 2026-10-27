@@ -9,13 +9,17 @@ const storage=window.localStorage;
 const pendingKey='thl_study_cloud_pending_v1';
 const ownerKey='thl_study_cloud_owner_v1';
 const validIds=new Set(study.ids());
+// Keep prior 35-day lecture/checklist IDs readable and backed up after changing the UI.
+// Never treat legacy flags as completion of new section checkpoints.
+const legacyId=/^(?:d\d{1,2}[tw]\d{1,2}|p\d{1,2}|[KR]\d{1,2}|ref\d{1,2})$/;
+const allowedId=id=>validIds.has(id)||legacyId.test(id);
 let client=null, signedUser=null, busy=false, ready=false;
 const getJSON=(key)=>{try{const v=JSON.parse(storage.getItem(key)||'{}');return v&&typeof v==='object'&&!Array.isArray(v)?v:{}}catch{return {}}};
 const storeJSON=(key,v)=>{try{storage.setItem(key,JSON.stringify(v))}catch{}};
 const status=(message)=>{if(statusEl)statusEl.textContent=message};
 const isConfigured=()=>/^https:\/\/[a-z0-9-]+\.supabase\.co\/?$/i.test(config.url||'')&&/^sb_publishable_|^eyJ/.test(config.publishableKey||'');
 function queueChange(id,checked){
- if(!validIds.has(id))return;
+ if(!allowedId(id))return;
  const p=getJSON(pendingKey);
  p[id]=Boolean(checked);
  storeJSON(pendingKey,p);
@@ -56,16 +60,18 @@ async function syncNow(){
   if(owner&&owner!==signedUser.id){storeJSON(pendingKey,{});study.applyRemote({},'light');owner=null}
   const {data:cloud,error:readError}=await client.from('thl_study_items').select('item_id,checked').eq('user_id',signedUser.id);
   if(readError)throw readError;
-  const remote={};for(const row of cloud||[])if(validIds.has(row.item_id))remote[row.item_id]=row.checked===true;
+  const remote={};for(const row of cloud||[])if(allowedId(row.item_id))remote[row.item_id]=row.checked===true;
   const local=study.getState();
   const pending=getJSON(pendingKey);
   const updates={};
   if(!owner){
     // Migration: seed ONLY checked local items missing in cloud, never
     // overwrite an already stored remote false/true on another browser.
-    for(const [id,value] of Object.entries(local))if(validIds.has(id)&&value===true&&!(id in remote))updates[id]=true;
+    for(const [id,value] of Object.entries(local))if(allowedId(id)&&value===true&&!(id in remote))updates[id]=true;
   }
-  if(!owner||owner===signedUser.id)for(const [id,value] of Object.entries(pending))if(validIds.has(id))updates[id]=value===true;
+  // If already signed in, synchronize older checked IDs absent from the cloud rather than discarding them.
+  if(owner===signedUser.id){for(const [id,value] of Object.entries(local))if(legacyId.test(id)&&value===true&&!(id in remote))updates[id]=true;}
+  if(!owner||owner===signedUser.id)for(const [id,value] of Object.entries(pending))if(allowedId(id))updates[id]=value===true;
   if(Object.keys(updates).length){
    const rows=Object.entries(updates).map(([item_id,checked])=>({user_id:signedUser.id,item_id,checked,updated_at:new Date().toISOString()}));
    const {error:writeError}=await client.from('thl_study_items').upsert(rows,{onConflict:'user_id,item_id'});
